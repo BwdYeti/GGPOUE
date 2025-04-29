@@ -1,0 +1,4 @@
+# EOS SDK folders are ignored, since they shouldn't be distributed and need to be downloaded from Epic.
+Bin/
+Include/
+Lib/
