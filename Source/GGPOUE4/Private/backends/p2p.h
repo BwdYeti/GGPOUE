@@ -41,6 +41,7 @@ protected:
    GGPOPlayerHandle QueueToPlayerHandle(int queue) { return (GGPOPlayerHandle)(queue + 1); }
    GGPOPlayerHandle QueueToSpectatorHandle(int queue) { return (GGPOPlayerHandle)(queue + 1000); } /* out of range of the player array, basically */
    void DisconnectPlayerQueue(int queue, int syncto);
+   void DisconnectSpectatorQueue(int queue);
    void PollSyncEvents(void);
    void PollUdpProtocolEvents(void);
    void CheckInitialSync(void);

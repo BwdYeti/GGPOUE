@@ -36,7 +36,7 @@ public:
    }
 
    void push(const T &t) {
-      ASSERT(_size != (N-1));
+      ASSERT(!full());
       _elements[_head] = t;
       _head = (_head + 1) % N;
       _size++;
@@ -48,6 +48,10 @@ public:
 
    bool empty() {
       return _size == 0;
+   }
+
+   bool full() {
+      return _size == (N - 1);
    }
 
 protected:

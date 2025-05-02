@@ -135,7 +135,16 @@ Peer2PeerBackend::DoPoll(int timeout)
                   input.size = _input_size * _num_players;
                   _sync.GetConfirmedInputs(input.bits, _input_size * _num_players, _next_spectator_frame);
                   for (int i = 0; i < _num_spectators; i++) {
-                     _spectators[i].SendInput(input);
+                     // If the spectator's queue of pending outputs is full,
+                     // the need to be disconnected because they can't
+                     // be caught up
+                     if (_spectators[i].IsPendingFull())
+                     {
+                        Log("disconnecting spectator %d because their pending output buffer is full.\n", i);
+                        DisconnectSpectatorQueue(i);
+                     }
+                     else
+                        _spectators[i].SendInput(input);
                   }
                   _next_spectator_frame++;
                }
@@ -395,15 +404,9 @@ Peer2PeerBackend::OnUdpProtocolSpectatorEvent(UdpProtocol::Event &evt, int queue
    GGPOPlayerHandle handle = QueueToSpectatorHandle(queue);
    OnUdpProtocolEvent(evt, handle);
 
-   GGPOEvent info;
-
    switch (evt.type) {
    case UdpProtocol::Event::Disconnected:
-      _spectators[queue].Disconnect();
-
-      info.code = GGPO_EVENTCODE_DISCONNECTED_FROM_PEER;
-      info.u.disconnected.player = handle;
-      _callbacks.on_event(&info);
+      DisconnectSpectatorQueue(queue);
 
       break;
    }
@@ -512,6 +515,19 @@ Peer2PeerBackend::DisconnectPlayerQueue(int queue, int syncto)
    _callbacks.on_event(&info);
 
    CheckInitialSync();
+}
+
+void
+Peer2PeerBackend::DisconnectSpectatorQueue(int queue)
+{
+    GGPOEvent info;
+    GGPOPlayerHandle handle = QueueToSpectatorHandle(queue);
+
+    _spectators[queue].Disconnect();
+
+    info.code = GGPO_EVENTCODE_DISCONNECTED_FROM_PEER;
+    info.u.disconnected.player = handle;
+    _callbacks.on_event(&info);
 }
 
 

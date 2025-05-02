@@ -169,6 +169,12 @@ UdpProtocol::SendInputAck()
 }
 
 bool
+UdpProtocol::IsPendingFull()
+{
+    return  _pending_output.full() && _current_state != Disconnected;
+}
+
+bool
 UdpProtocol::GetEvent(UdpProtocol::Event &e)
 {
    if (_event_queue.size() == 0) {

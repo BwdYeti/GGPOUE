@@ -16,6 +16,8 @@
 #include "include/ggponet.h"
 #include "../ring_buffer.h"
 
+#define UDP_BUFFER_SIZE 384 //  Just over 6 seconds at 60fps
+
 class UdpProtocol : public IPollSink
 {
 public:
@@ -72,13 +74,13 @@ public:
    bool IsRunning() { return _current_state == Running; }
    void SendInput(GameInput &input);
    void SendInputAck();
+   bool IsPendingFull();
    bool HandlesMsg(sockaddr_in &from, UdpMsg *msg);
    void OnMsg(UdpMsg *msg, int len);
    void Disconnect();
   
    void GetNetworkStats(struct FGGPONetworkStats *stats);
    bool GetEvent(UdpProtocol::Event &e);
-   void FGGPONetworkStats(Stats *stats);
    void SetLocalFrameNumber(int num);
    int RecommendFrameDelay();
 
@@ -139,7 +141,7 @@ protected:
       sockaddr_in dest_addr;
       UdpMsg*     msg;
    }              _oo_packet;
-   RingBuffer<QueueEntry, 64> _send_queue;
+   RingBuffer<QueueEntry, UDP_BUFFER_SIZE> _send_queue;
 
    /*
     * Stats
@@ -178,7 +180,7 @@ protected:
    /*
     * Packet loss...
     */
-   RingBuffer<GameInput, 64>  _pending_output;
+   RingBuffer<GameInput, UDP_BUFFER_SIZE>  _pending_output;
    GameInput                  _last_received_input;
    GameInput                  _last_sent_input;
    GameInput                  _last_acked_input;
@@ -201,7 +203,7 @@ protected:
    /*
     * Event queue
     */
-   RingBuffer<UdpProtocol::Event, 64>  _event_queue;
+   RingBuffer<UdpProtocol::Event, UDP_BUFFER_SIZE>  _event_queue;
 };
 
 #endif
