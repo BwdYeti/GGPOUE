@@ -21,8 +21,16 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 		UGGPONetwork* NetworkAddresses;
 
-    /** Creates a collection of network addresses. */
+    /// <summary>
+    /// Creates a collection of network addresses.
+    /// </summary>
     UFUNCTION(BlueprintCallable, Category = "GGPO")
-        void CreateNetwork(int32 NumPlayers, int32 PlayerIndex, int32 LocalPort, TArray<FString> RemoteAddresses);
-	
+        void CreateNetwork(int32 NumPlayers, int32 PlayerIndex, int32 LocalPort, TArray<FString> RemoteAddresses, TArray<FString> SpectatorAddresses);
+
+    /// <summary>
+    /// Creates a collection of network addresses for a spectator.
+    /// </summary>
+    UFUNCTION(BlueprintCallable, Category = "GGPO")
+        void CreateSpectatorNetwork(int32 NumPlayers, int32 LocalPort, FString HostAddress);
+
 };

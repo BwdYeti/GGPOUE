@@ -142,19 +142,25 @@ private:
     UPROPERTY()
         int32 LocalPlayerIndex = -1;
     UPROPERTY()
+        int32 NumPlayers = 0;
+    UPROPERTY()
+        int32 LocalPort = 7000;
+    UPROPERTY()
         TArray<UGGPONetworkAddress*> Addresses;
+    UPROPERTY()
+        TArray<UGGPONetworkAddress*> Spectators;
 
 public:
     UGGPONetwork() {}
 
     /** Creates a collection of network addresses. */
     UFUNCTION(BlueprintCallable, Category = "GGPO")
-        static UGGPONetwork* CreateNetwork(UObject* Outer, const FName Name, int32 NumPlayers, int32 PlayerIndex, int32 LocalPort, TArray<FString> RemoteAddresses);
+        static UGGPONetwork* CreateNetwork(UObject* Outer, const FName Name, int32 InNumPlayers, int32 PlayerIndex, int32 InLocalPort, TArray<FString> RemoteAddresses);
 
-    /** Returns whether all addresses are valid. */
+    /** Returns true if all addresses are valid. */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
         bool AllValidAddresses() const;
-    /** Returns whether all addresses are unique. */
+    /** Returns true if all addresses are unique. */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
         bool AllUniqueAddresses() const;
 
@@ -163,13 +169,32 @@ public:
         UGGPONetworkAddress* GetAddress(int32 Index) const;
     /** Gets the total number of players on the network. */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
-        int32 NumPlayers() const;
+        int32 NumAddresses() const;
     /** Gets the local player index. */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
-        int32 GetPlayerIndex() const;
+        int32 GetLocalPlayerIndex() const { return LocalPlayerIndex; }
+
+    /** Gets one spectator. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
+        UGGPONetworkAddress* GetSpectator(int32 Index) const;
+    /** Gets the total number of players on the network. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
+        int32 NumSpectators() const;
+
+    /** Gets number of players in the game session. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
+        int32 GetNumPlayers() const { return NumPlayers; }
+
     /** Gets the local port. */
     UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
         int32 GetLocalPort() const;
+
+    /** Returns true if this game instance is spectating. */
+    UFUNCTION(BlueprintCallable, BlueprintPure, Category = "GGPO")
+        bool IsSpectator() const
+    {
+        return LocalPlayerIndex < 0;
+    }
 
 };
 
