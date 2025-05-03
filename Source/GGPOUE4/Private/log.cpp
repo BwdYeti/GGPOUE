@@ -7,15 +7,7 @@
 
 #include "log.h"
 #include "types.h"
-
-static FILE *logfile = NULL;
-
-void LogFlush()
-{
-   if (logfile) {
-      fflush(logfile);
-   }
-}
+#include "GGPOUE4_Settings.h"
 
 static char logbuf[4 * 1024 * 1024];
 
@@ -29,32 +21,28 @@ void Log(const char *fmt, ...)
 
 void Logv(const char *fmt, va_list args)
 {
-   if (!Platform::GetConfigBool("ggpo.log") || Platform::GetConfigBool("ggpo.log.ignore")) {
-      return;
-   }
-   if (!logfile) {
-      sprintf_s(logbuf, ARRAY_SIZE(logbuf), "log-%lu.log", Platform::GetProcessID());
-      fopen_s(&logfile, logbuf, "w");
-   }
-   Logv(logfile, fmt, args);
-}
-
-void Logv(FILE *fp, const char *fmt, va_list args)
-{
-   if (Platform::GetConfigBool("ggpo.log.timestamps")) {
-      static int start = 0;
-      int t = 0;
-      if (!start) {
-         start = Platform::GetCurrentTimeMS();
-      } else {
-         t = Platform::GetCurrentTimeMS() - start;
+#if WITH_EDITOR
+   if (GIsEditor)
+   {
+       // Get the settings object
+       // Return if logging is not enabled
+      UGGPOUE4_Settings* Settings = GetMutableDefault<UGGPOUE4_Settings>();
+      if (!Settings->LoggingEnabled) {
+         return;
       }
-      fprintf(fp, "%d.%03d : ", t / 1000, t % 1000);
-   }
 
-   vfprintf(fp, fmt, args);
-   fflush(fp);
-   
-   vsprintf_s(logbuf, ARRAY_SIZE(logbuf), fmt, args);
+      // Apply the string format
+      vsprintf_s(logbuf, ARRAY_SIZE(logbuf), fmt, args);
+      FString Message = FString(strlen(logbuf), logbuf);
+
+      // If this is an instance playing in the editor, include its Id
+      if (GPlayInEditorID >= 0)
+      {
+          Message.InsertAt(0, FString::Printf(TEXT("PIE %d :: "), GPlayInEditorID));
+      }
+
+      UE_LOG(LogNet, Display, TEXT("%s"), *Message);
+   }
+#endif
 }
 
