@@ -15,11 +15,18 @@ void Log(const char *fmt, ...)
 {
    va_list args;
    va_start(args, fmt);
-   Logv(fmt, args);
+   Logv(EGGPOLogVerbosity::VeryVerbose, fmt, args);
+   va_end(args);
+}
+void Log(EGGPOLogVerbosity Verbosity, const char *fmt, ...)
+{
+   va_list args;
+   va_start(args, fmt);
+   Logv(Verbosity, fmt, args);
    va_end(args);
 }
 
-void Logv(const char *fmt, va_list args)
+void Logv(EGGPOLogVerbosity Verbosity, const char *fmt, va_list args)
 {
 #if WITH_EDITOR
    if (GIsEditor)
@@ -27,18 +34,22 @@ void Logv(const char *fmt, va_list args)
        // Get the settings object
        // Return if logging is not enabled
       UGGPOUE4_Settings* Settings = GetMutableDefault<UGGPOUE4_Settings>();
-      if (!Settings->LoggingEnabled) {
+      if (!Settings->LoggingEnabled)
          return;
-      }
+
+      // If the message is too verbose for the log settings, return
+      if (Verbosity > Settings->LogVerbosity)
+         return;
 
       // Apply the string format
       vsprintf_s(logbuf, ARRAY_SIZE(logbuf), fmt, args);
       FString Message = FString(strlen(logbuf), logbuf);
 
+      Message.InsertAt(0, FString::Printf(TEXT("GGPO :: "), GPlayInEditorID));
       // If this is an instance playing in the editor, include its Id
       if (GPlayInEditorID >= 0)
       {
-          Message.InsertAt(0, FString::Printf(TEXT("PIE %d :: "), GPlayInEditorID));
+          Message.InsertAt(0, FString::Printf(TEXT("PIE %d-"), GPlayInEditorID));
       }
 
       UE_LOG(LogNet, Display, TEXT("%s"), *Message);

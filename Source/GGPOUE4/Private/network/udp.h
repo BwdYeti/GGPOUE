@@ -33,7 +33,7 @@ public:
 
 
 protected:
-   void Log(const char *fmt, ...);
+   void Log(EGGPOLogVerbosity Verbosity, const char *fmt, ...);
 
 public:
    Udp();

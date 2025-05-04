@@ -234,7 +234,7 @@ UdpProtocol::OnLoopPoll(void *cookie)
 
       if (_disconnect_timeout && _disconnect_notify_start && 
          !_disconnect_notify_sent && (_last_recv_time + _disconnect_notify_start < now)) {
-         Log("Endpoint has stopped receiving packets for %d ms.  Sending notification.\n", _disconnect_notify_start);
+         ::Log(EGGPOLogVerbosity::Verbose, "Endpoint has stopped receiving packets for %d ms.  Sending notification.\n", _disconnect_notify_start);
          Event e(Event::NetworkInterrupted);
          e.u.network_interrupted.disconnect_timeout = _disconnect_timeout - _disconnect_notify_start;
          QueueEvent(e);
@@ -243,7 +243,7 @@ UdpProtocol::OnLoopPoll(void *cookie)
 
       if (_disconnect_timeout && (_last_recv_time + _disconnect_timeout < now)) {
          if (!_disconnect_event_sent) {
-            Log("Endpoint has stopped receiving packets for %d ms.  Disconnecting.\n", _disconnect_timeout);
+            ::Log(EGGPOLogVerbosity::Info, "Endpoint has stopped receiving packets for %d ms.  Disconnecting.\n", _disconnect_timeout);
             QueueEvent(Event(Event::Disconnected));
             _disconnect_event_sent = true;
          }
@@ -252,7 +252,7 @@ UdpProtocol::OnLoopPoll(void *cookie)
 
    case Disconnected:
       if (_shutdown_timeout < now) {
-         Log("Shutting down udp connection.\n");
+         ::Log(EGGPOLogVerbosity::Info, "Shutting down udp connection.\n");
          _udp = NULL;
          _shutdown_timeout = 0;
       }
@@ -459,7 +459,7 @@ UdpProtocol::LogEvent(const char *prefix, const UdpProtocol::Event &evt)
 {
    switch (evt.type) {
    case UdpProtocol::Event::Synchronzied:
-      Log("%s (event: Synchronzied).\n", prefix);
+      ::Log(EGGPOLogVerbosity::Verbose, "%s (event: Synchronzied).\n", prefix);
       break;
    }
 }
@@ -475,7 +475,7 @@ bool
 UdpProtocol::OnSyncRequest(UdpMsg *msg, int len)
 {
    if (_remote_magic_number != 0 && msg->hdr.magic != _remote_magic_number) {
-      Log("Ignoring sync request from unknown endpoint (%d != %d).\n", 
+      ::Log(EGGPOLogVerbosity::Info, "Ignoring sync request from unknown endpoint (%d != %d).\n",
            msg->hdr.magic, _remote_magic_number);
       return false;
    }
@@ -489,12 +489,12 @@ bool
 UdpProtocol::OnSyncReply(UdpMsg *msg, int len)
 {
    if (_current_state != Syncing) {
-      Log("Ignoring SyncReply while not synching.\n");
+      ::Log(EGGPOLogVerbosity::Info, "Ignoring SyncReply while not synching.\n");
       return msg->hdr.magic == _remote_magic_number;
    }
 
    if (msg->u.sync_reply.random_reply != _state.sync.random) {
-      Log("sync reply %d != %d.  Keep looking...\n",
+      ::Log(EGGPOLogVerbosity::Info, "sync reply %d != %d.  Keep looking...\n",
           msg->u.sync_reply.random_reply, _state.sync.random);
       return false;
    }
@@ -506,7 +506,7 @@ UdpProtocol::OnSyncReply(UdpMsg *msg, int len)
 
    Log("Checking sync state (%d round trips remaining).\n", _state.sync.roundtrips_remaining);
    if (--_state.sync.roundtrips_remaining == 0) {
-      Log("Synchronized!\n");
+      ::Log(EGGPOLogVerbosity::Info, "Synchronized!\n");
       QueueEvent(UdpProtocol::Event(UdpProtocol::Event::Synchronzied));
       _current_state = Running;
       _last_received_input.frame = -1;
@@ -530,7 +530,7 @@ UdpProtocol::OnInput(UdpMsg *msg, int len)
    bool disconnect_requested = msg->u.input.disconnect_requested;
    if (disconnect_requested) {
       if (_current_state != Disconnected && !_disconnect_event_sent) {
-         Log("Disconnecting endpoint on remote request.\n");
+         ::Log(EGGPOLogVerbosity::Info, "Disconnecting endpoint on remote request.\n");
          QueueEvent(Event(Event::Disconnected));
          _disconnect_event_sent = true;
       }

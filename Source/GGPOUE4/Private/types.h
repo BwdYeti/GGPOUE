@@ -56,10 +56,7 @@ typedef int int32;
       if (!(x)) {                                           \
          char assert_buf[1024];                             \
          snprintf(assert_buf, sizeof(assert_buf) - 1, "Assertion: %s @ %s:%d (pid:%lu)", #x, __FILE__, __LINE__, Platform::GetProcessID()); \
-         Log("%s\n", assert_buf);                           \
-         Log("\n");                                         \
-         Log("\n");                                         \
-         Log("\n");                                         \
+         ::Log("%s\n", assert_buf);                         \
          Platform::AssertFailed(assert_buf);                \
          exit(0);                                           \
       }                                                     \

@@ -140,7 +140,7 @@ Peer2PeerBackend::DoPoll(int timeout)
                      // be caught up
                      if (_spectators[i].IsPendingFull())
                      {
-                        Log("disconnecting spectator %d because their pending output buffer is full.\n", i);
+                        Log(EGGPOLogVerbosity::Info, "disconnecting spectator %d because their pending output buffer is full.\n", i);
                         DisconnectSpectatorQueue(i);
                      }
                      else
@@ -194,7 +194,7 @@ int Peer2PeerBackend::Poll2Players(int current_frame)
       }
       Log("  local endp: connected = %d, last_received = %d, total_min_confirmed = %d.\n", !_local_connect_status[i].disconnected, _local_connect_status[i].last_frame, total_min_confirmed);
       if (!queue_connected && !_local_connect_status[i].disconnected) {
-         Log("disconnecting i %d by remote request.\n", i);
+         Log(EGGPOLogVerbosity::Info, "disconnecting i %d by remote request.\n", i);
          DisconnectPlayerQueue(i, total_min_confirmed);
       }
       Log("  total_min_confirmed = %d.\n", total_min_confirmed);
@@ -239,7 +239,7 @@ int Peer2PeerBackend::PollNPlayers(int current_frame)
          // so, we need to re-adjust.  This can happen when we detect our own disconnect at frame n
          // and later receive a disconnect notification for frame n-1.
          if (!_local_connect_status[queue].disconnected || _local_connect_status[queue].last_frame > queue_min_confirmed) {
-            Log("disconnecting queue %d by remote request.\n", queue);
+            Log(EGGPOLogVerbosity::Info, "disconnecting queue %d by remote request.\n", queue);
             DisconnectPlayerQueue(queue, queue_min_confirmed);
          }
       }
@@ -477,14 +477,14 @@ Peer2PeerBackend::DisconnectPlayer(GGPOPlayerHandle player)
       int current_frame = _sync.GetFrameCount();
       // xxx: we should be tracking who the local player is, but for now assume
       // that if the endpoint is not initalized, this must be the local player.
-      Log("Disconnecting local player %d at frame %d by user request.\n", queue, _local_connect_status[queue].last_frame);
+      Log(EGGPOLogVerbosity::Info, "Disconnecting local player %d at frame %d by user request.\n", queue, _local_connect_status[queue].last_frame);
       for (int i = 0; i < _num_players; i++) {
          if (_endpoints[i].IsInitialized()) {
             DisconnectPlayerQueue(i, current_frame);
          }
       }
    } else {
-      Log("Disconnecting queue %d at frame %d by user request.\n", queue, _local_connect_status[queue].last_frame);
+      Log(EGGPOLogVerbosity::Info, "Disconnecting queue %d at frame %d by user request.\n", queue, _local_connect_status[queue].last_frame);
       DisconnectPlayerQueue(queue, _local_connect_status[queue].last_frame);
    }
    return GGPO_OK;
@@ -498,14 +498,14 @@ Peer2PeerBackend::DisconnectPlayerQueue(int queue, int syncto)
 
    _endpoints[queue].Disconnect();
 
-   Log("Changing queue %d local connect status for last frame from %d to %d on disconnect request (current: %d).\n",
+   Log(EGGPOLogVerbosity::Info, "Changing queue %d local connect status for last frame from %d to %d on disconnect request (current: %d).\n",
        queue, _local_connect_status[queue].last_frame, syncto, framecount);
 
    _local_connect_status[queue].disconnected = 1;
    _local_connect_status[queue].last_frame = syncto;
 
    if (syncto < framecount) {
-      Log("adjusting simulation to account for the fact that %d disconnected @ %d.\n", queue, syncto);
+      Log(EGGPOLogVerbosity::Verbose, "adjusting simulation to account for the fact that %d disconnected @ %d.\n", queue, syncto);
       _sync.AdjustSimulation(syncto);
       Log("finished adjusting simulation.\n");
    }
@@ -600,7 +600,7 @@ Peer2PeerBackend::TrySynchronizeLocal()
     if (_synchronizing) {
         return GGPO_ERRORCODE_NOT_SYNCHRONIZED;
     }
-    Log("Synchronized local-only simulation.\n");
+    Log(EGGPOLogVerbosity::Info, "Synchronized local-only simulation.\n");
     return GGPO_OK;
 }
 

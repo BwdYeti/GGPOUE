@@ -22,7 +22,7 @@ public:
    virtual GGPOErrorCode AddLocalInput(GGPOPlayerHandle player, void *values, int size);
    virtual GGPOErrorCode SyncInput(void *values, int size, int *disconnect_flags);
    virtual GGPOErrorCode IncrementFrame(void);
-   virtual GGPOErrorCode Logv(char *fmt, va_list list);
+   virtual GGPOErrorCode Logv(EGGPOLogVerbosity Verbosity, char *fmt, va_list list);
 
 protected:
    struct SavedInfo {

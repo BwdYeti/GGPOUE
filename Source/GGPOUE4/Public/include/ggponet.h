@@ -9,6 +9,7 @@
 
 #include "CoreMinimal.h"
 #include <stdarg.h>
+#include "../../Private/log.h"
 #include "ggponet.generated.h"
 
 UENUM(BlueprintType)
@@ -766,12 +767,13 @@ public:
     /*
      * ggpo_log --
      *
-     * Used to write to the ggpo.net log.  In the current versions of the
-     * SDK, a log file is only generated if the "quark.log" environment
-     * variable is set to 1.  This will change in future versions of the
-     * SDK.
+     * Used to write to the Unreal Engine log.
+     * The log is controlled from the project settings using GGPOUE4_Settings.
      */
     static GGPO_API void __cdecl ggpo_log(GGPOSession*,
+        const char* fmt, ...);
+    static GGPO_API void __cdecl ggpo_log(GGPOSession*,
+        EGGPOLogVerbosity Verbosity,
         const char* fmt, ...);
     /*
      * ggpo_logv --
@@ -780,6 +782,7 @@ public:
      * more details.
      */
     static GGPO_API void __cdecl ggpo_logv(GGPOSession*,
+        EGGPOLogVerbosity Verbosity,
         const char* fmt,
         va_list args);
 };

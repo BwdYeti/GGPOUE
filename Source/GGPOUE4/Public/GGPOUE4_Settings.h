@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
+#include "log.h"
 #include "GGPOUE4_Settings.generated.h"
 
 /**
@@ -19,5 +20,8 @@ public:
 
 	UPROPERTY(Config, BlueprintReadOnly, EditAnywhere, Category = "Logging")
 		bool LoggingEnabled = false;
+
+	UPROPERTY(Config, BlueprintReadOnly, EditAnywhere, Category = "Logging")
+		EGGPOLogVerbosity LogVerbosity = EGGPOLogVerbosity::Info;
 	
 };

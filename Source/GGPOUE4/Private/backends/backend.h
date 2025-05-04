@@ -21,7 +21,7 @@ struct GGPOSession {
    virtual GGPOErrorCode Chat(char *text) { return GGPO_OK; }
    virtual GGPOErrorCode DisconnectPlayer(GGPOPlayerHandle handle) { return GGPO_OK; }
    virtual GGPOErrorCode GetNetworkStats(FGGPONetworkStats *stats, GGPOPlayerHandle handle) { return GGPO_OK; }
-   virtual GGPOErrorCode Logv(const char *fmt, va_list list) { ::Logv(fmt, list); return GGPO_OK; }
+   virtual GGPOErrorCode Logv(EGGPOLogVerbosity Verbosity, const char *fmt, va_list list) { ::Logv(Verbosity, fmt, list); return GGPO_OK; }
 
    virtual GGPOErrorCode SetFrameDelay(GGPOPlayerHandle player, int delay) { return GGPO_ERRORCODE_UNSUPPORTED; }
    virtual GGPOErrorCode SetDisconnectTimeout(int timeout) { return GGPO_ERRORCODE_UNSUPPORTED; }

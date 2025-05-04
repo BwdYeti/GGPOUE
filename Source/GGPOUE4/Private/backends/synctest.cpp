@@ -173,7 +173,7 @@ SyncTestBackend::RaiseSyncError(const char *fmt, ...)
 }
 
 GGPOErrorCode
-SyncTestBackend::Logv(char *fmt, va_list list)
+SyncTestBackend::Logv(EGGPOLogVerbosity Verbosity, char *fmt, va_list list)
 {
    if (_logfp) {
       vfprintf(_logfp, fmt, list);

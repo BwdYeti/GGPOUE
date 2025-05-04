@@ -23,15 +23,24 @@ GGPONet::ggpo_log(GGPOSession *ggpo, const char *fmt, ...)
 {
    va_list args;
    va_start(args, fmt);
-   ggpo_logv(ggpo, fmt, args);
+   ggpo_logv(ggpo, EGGPOLogVerbosity::Info, fmt, args);
    va_end(args);
 }
 
 void
-GGPONet::ggpo_logv(GGPOSession *ggpo, const char *fmt, va_list args)
+GGPONet::ggpo_log(GGPOSession *ggpo, EGGPOLogVerbosity Verbosity, const char *fmt, ...)
+{
+   va_list args;
+   va_start(args, fmt);
+   ggpo_logv(ggpo, Verbosity, fmt, args);
+   va_end(args);
+}
+
+void
+GGPONet::ggpo_logv(GGPOSession *ggpo, EGGPOLogVerbosity Verbosity, const char *fmt, va_list args)
 {
    if (ggpo) {
-      ggpo->Logv(fmt, args);
+      ggpo->Logv(Verbosity, fmt, args);
    }
 }
 

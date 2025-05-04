@@ -29,7 +29,7 @@ CreateSocket(uint16 bind_port, int retries)
    for (port = bind_port; port <= bind_port + retries; port++) {
       sin.sin_port = htons(port);
       if (bind(s, (sockaddr *)&sin, sizeof sin) != SOCKET_ERROR) {
-         Log("Udp bound to port: %d.\n", port);
+         Log(EGGPOLogVerbosity::Info, "Udp bound to port: %d.\n", port);
          return s;
       }
    }
@@ -59,7 +59,7 @@ Udp::Init(uint16 port, Poll *poll, Callbacks *callbacks)
    _poll = poll;
    _poll->RegisterLoop(this);
 
-   Log("binding udp socket to port %d.\n", port);
+   Log(EGGPOLogVerbosity::Info, "binding udp socket to port %d.\n", port);
    _socket = CreateSocket(port, 0);
 }
 
@@ -71,11 +71,11 @@ Udp::SendTo(char *buffer, int len, int flags, struct sockaddr *dst, int destlen)
    int res = sendto(_socket, buffer, len, flags, dst, destlen);
    if (res == SOCKET_ERROR) {
       DWORD err = WSAGetLastError();
-      Log("unknown error in sendto (erro: %d  wsaerr: %d).\n", res, err);
+      Log(EGGPOLogVerbosity::Info, "unknown error in sendto (erro: %d  wsaerr: %d).\n", res, err);
       ASSERT(false && "Unknown error in sendto");
    }
    char dst_ip[1024];
-   Log("sent packet length %d to %s:%d (ret:%d).\n", len, inet_ntop(AF_INET, (void *)&to->sin_addr, dst_ip, ARRAY_SIZE(dst_ip)), ntohs(to->sin_port), res);
+   Log(EGGPOLogVerbosity::VeryVerbose, "sent packet length %d to %s:%d (ret:%d).\n", len, inet_ntop(AF_INET, (void *)&to->sin_addr, dst_ip, ARRAY_SIZE(dst_ip)), ntohs(to->sin_port), res);
 }
 
 bool
@@ -94,12 +94,12 @@ Udp::OnLoopPoll(void *cookie)
       if (len == -1) {
          int error = WSAGetLastError();
          if (error != WSAEWOULDBLOCK) {
-            Log("recvfrom WSAGetLastError returned %d (%x).\n", error, error);
+            Log(EGGPOLogVerbosity::VeryVerbose, "recvfrom WSAGetLastError returned %d (%x).\n", error, error);
          }
          break;
       } else if (len > 0) {
          char src_ip[1024];
-         Log("recvfrom returned (len:%d  from:%s:%d).\n", len, inet_ntop(AF_INET, (void*)&recv_addr.sin_addr, src_ip, ARRAY_SIZE(src_ip)), ntohs(recv_addr.sin_port) );
+         Log(EGGPOLogVerbosity::VeryVerbose, "recvfrom returned (len:%d  from:%s:%d).\n", len, inet_ntop(AF_INET, (void*)&recv_addr.sin_addr, src_ip, ARRAY_SIZE(src_ip)), ntohs(recv_addr.sin_port) );
          UdpMsg *msg = (UdpMsg *)recv_buf;
          _callbacks->OnMsg(recv_addr, msg, len);
       } 
@@ -109,7 +109,7 @@ Udp::OnLoopPoll(void *cookie)
 
 
 void
-Udp::Log(const char *fmt, ...)
+Udp::Log(EGGPOLogVerbosity Verbosity, const char *fmt, ...)
 {
    char buf[1024];
    size_t offset;
@@ -120,6 +120,6 @@ Udp::Log(const char *fmt, ...)
    va_start(args, fmt);
    vsnprintf(buf + offset, ARRAY_SIZE(buf) - offset - 1, fmt, args);
    buf[ARRAY_SIZE(buf)-1] = '\0';
-   ::Log("%s", buf);
+   ::Log(Verbosity, "%s", buf);
    va_end(args);
 }

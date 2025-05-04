@@ -7,6 +7,15 @@
 
 #pragma once
 
+UENUM(BlueprintType)
+enum class EGGPOLogVerbosity : uint8
+{
+    Info = 0     UMETA(DisplayName = "Info"),
+    Verbose = 1     UMETA(DisplayName = "Verbose"),
+    VeryVerbose = 2     UMETA(DisplayName = "Very Verbose"),
+};
+
 extern void Log(const char *fmt, ...);
-extern void Logv(const char *fmt, va_list list);
+extern void Log(EGGPOLogVerbosity Verbosity, const char *fmt, ...);
+extern void Logv(EGGPOLogVerbosity Verbosity, const char *fmt, va_list list);
 
