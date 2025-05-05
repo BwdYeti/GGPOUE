@@ -16,7 +16,7 @@
 #include "include/ggponet.h"
 #include "../ring_buffer.h"
 
-#define UDP_BUFFER_SIZE 384 //  Just over 6 seconds at 60fps
+#define UDP_BUFFER_SIZE BUFFER_SIZE
 
 class UdpProtocol : public IPollSink
 {

@@ -13,7 +13,7 @@
 #include "backend.h"
 #include "../network/udp_proto.h"
 
-#define SPECTATOR_FRAME_BUFFER_SIZE    64
+#define SPECTATOR_FRAME_BUFFER_SIZE    BUFFER_SIZE
 
 class SpectatorBackend : public IQuarkBackend, IPollSink, Udp::Callbacks {
 public:

@@ -15,6 +15,7 @@
 #define MIN_UNIQUE_FRAMES           10
 #define MIN_FRAME_ADVANTAGE          3
 #define MAX_FRAME_ADVANTAGE          9
+#define BUFFER_SIZE                384 //  Just over 6 seconds at 60fps
 
 class TimeSync {
 public:
