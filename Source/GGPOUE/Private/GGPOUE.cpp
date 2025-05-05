@@ -1,6 +1,6 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-#include "GGPOUE4.h"
+#include "GGPOUE.h"
 
 #define LOCTEXT_NAMESPACE "FGGPOUE4Module"
 

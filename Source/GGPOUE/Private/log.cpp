@@ -7,7 +7,7 @@
 
 #include "log.h"
 #include "types.h"
-#include "GGPOUE4_Settings.h"
+#include "GGPOUE_Settings.h"
 
 static char logbuf[4 * 1024 * 1024];
 

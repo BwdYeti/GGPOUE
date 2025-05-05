@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
 #include "log.h"
-#include "GGPOUE4_Settings.generated.h"
+#include "GGPOUE_Settings.generated.h"
 
 /**
  * 
