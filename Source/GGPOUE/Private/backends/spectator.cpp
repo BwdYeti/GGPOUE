@@ -170,9 +170,20 @@ SpectatorBackend::OnUdpProtocolEvent(UdpProtocol::Event &evt)
    case UdpProtocol::Event::Input:
       GameInput& input = evt.u.input.input;
 
-      _host.SetLocalFrameNumber(_next_input_to_send);
-      _host.SendInputAck();
-      _inputs[input.frame % SPECTATOR_FRAME_BUFFER_SIZE] = input;
+      // If the input buffer would overflow, have to disconnect
+      if (input.frame >= _next_input_to_send + SPECTATOR_FRAME_BUFFER_SIZE)
+      {
+          _host.Disconnect();
+          info.code = GGPO_EVENTCODE_DISCONNECTED_FROM_PEER;
+          info.u.disconnected.player = 0;
+          _callbacks.on_event(&info);
+      }
+      else
+      {
+          _host.SetLocalFrameNumber(_next_input_to_send);
+          _host.SendInputAck();
+          _inputs[input.frame % SPECTATOR_FRAME_BUFFER_SIZE] = input;
+      }
       break;
    }
 }
