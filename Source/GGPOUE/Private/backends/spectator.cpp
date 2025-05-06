@@ -96,6 +96,19 @@ SpectatorBackend::IncrementFrame(void)
    return GGPO_OK;
 }
 
+GGPOErrorCode
+SpectatorBackend::GetNetworkStats(FGGPONetworkStats* stats, GGPOPlayerHandle player)
+{
+    if (!_host.IsRunning()) {
+        return GGPO_ERRORCODE_NOT_SYNCHRONIZED;
+    }
+
+    memset(stats, 0, sizeof * stats);
+    _host.GetNetworkStats(stats);
+
+    return GGPO_OK;
+}
+
 void
 SpectatorBackend::PollUdpProtocolEvents(void)
 {
@@ -157,7 +170,7 @@ SpectatorBackend::OnUdpProtocolEvent(UdpProtocol::Event &evt)
    case UdpProtocol::Event::Input:
       GameInput& input = evt.u.input.input;
 
-      _host.SetLocalFrameNumber(input.frame);
+      _host.SetLocalFrameNumber(_next_input_to_send);
       _host.SendInputAck();
       _inputs[input.frame % SPECTATOR_FRAME_BUFFER_SIZE] = input;
       break;

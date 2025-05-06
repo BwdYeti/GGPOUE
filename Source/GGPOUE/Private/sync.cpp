@@ -128,7 +128,9 @@ void
 Sync::CheckSimulation(int timeout)
 {
    int seek_to;
+   // If the simulation is no longer synched
    if (!CheckSimulationConsistency(&seek_to)) {
+      // Jump back to the most recent frame that was still in synch and re-simulate
       AdjustSimulation(seek_to);
    }
 }

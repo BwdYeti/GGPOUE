@@ -13,6 +13,8 @@
 #include "backend.h"
 #include "../network/udp_proto.h"
 
+// Spectators will wait forever for the host when the host is behind
+// This value is important for how far behind the spectator can be
 #define SPECTATOR_FRAME_BUFFER_SIZE    BUFFER_SIZE
 
 class SpectatorBackend : public IQuarkBackend, IPollSink, Udp::Callbacks {
@@ -28,7 +30,7 @@ public:
    virtual GGPOErrorCode SyncInput(void *values, int size, int *disconnect_flags);
    virtual GGPOErrorCode IncrementFrame(void);
    virtual GGPOErrorCode DisconnectPlayer(GGPOPlayerHandle handle) { return GGPO_ERRORCODE_UNSUPPORTED; }
-   virtual GGPOErrorCode GetNetworkStats(FGGPONetworkStats *stats, GGPOPlayerHandle handle) { return GGPO_ERRORCODE_UNSUPPORTED; }
+   virtual GGPOErrorCode GetNetworkStats(FGGPONetworkStats* stats, GGPOPlayerHandle handle);
    virtual GGPOErrorCode SetFrameDelay(GGPOPlayerHandle player, int delay) { return GGPO_ERRORCODE_UNSUPPORTED; }
    virtual GGPOErrorCode SetDisconnectTimeout(int timeout) { return GGPO_ERRORCODE_UNSUPPORTED; }
    virtual GGPOErrorCode SetDisconnectNotifyStart(int timeout) { return GGPO_ERRORCODE_UNSUPPORTED; }
