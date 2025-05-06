@@ -78,7 +78,7 @@ bool UGGPONetworkAddress::IsSameAddress(const UGGPONetworkAddress* Other) const
 
 UGGPONetwork* UGGPONetwork::CreateNetwork(UObject* Outer, const FName Name, int32 InNumPlayers, int32 PlayerIndex, int32 InLocalPort, TArray<FString> RemoteAddresses)
 {
-    UGGPONetwork* Result = NewObject<UGGPONetwork>(Outer, Name);
+    TObjectPtr<UGGPONetwork> Result = NewObject<UGGPONetwork>(Outer, Name);
 
     Result->LocalPlayerIndex = PlayerIndex - 1;
     Result->NumPlayers = InNumPlayers;

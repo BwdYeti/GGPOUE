@@ -10,7 +10,7 @@ void UGGPOGameInstance::CreateNetwork(int32 NumPlayers, int32 PlayerIndex, int32
 	// CreateNetwork() will count out the NumPlayers,
 	// and then handle the spectators after that
 	RemoteAddresses.Append(SpectatorAddresses);
-	UGGPONetwork* addresses = UGGPONetwork::CreateNetwork(
+	TObjectPtr<UGGPONetwork> addresses = UGGPONetwork::CreateNetwork(
 		this,
 		FName(FString(TEXT("GGPONetwork"))),
 		NumPlayers,
@@ -22,7 +22,7 @@ void UGGPOGameInstance::CreateNetwork(int32 NumPlayers, int32 PlayerIndex, int32
 
 void UGGPOGameInstance::CreateSpectatorNetwork(int32 NumPlayers, int32 LocalPort, FString HostAddress)
 {
-	UGGPONetwork* addresses = UGGPONetwork::CreateNetwork(
+	TObjectPtr<UGGPONetwork> addresses = UGGPONetwork::CreateNetwork(
 		this,
 		FName(FString(TEXT("GGPONetwork"))),
 		NumPlayers,

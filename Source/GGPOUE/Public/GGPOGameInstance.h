@@ -19,7 +19,7 @@ class GGPOUE_API UGGPOGameInstance : public UGameInstance
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-		UGGPONetwork* NetworkAddresses;
+		TObjectPtr<UGGPONetwork> NetworkAddresses;
 
     /// <summary>
     /// Creates a collection of network addresses.
