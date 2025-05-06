@@ -1,4 +1,4 @@
-# GGPOUE4
+# GGPOUE
 
 A port of [GGPO](http://ggpo.net) to an Unreal Engine 4 plugin.
 
@@ -10,7 +10,7 @@ See [doc/README.md](doc/README.md), [doc/DeveloperGuide.md](doc/DeveloperGuide.m
 
 ### Sample Application
 
-[VectorWar UE4](https://github.com/BwdYeti/VectorWarUE4) is a port of the GGPO sample game VectorWar, using GGPOUE4 for netcode.
+[VectorWar UE4](https://github.com/BwdYeti/VectorWarUE4) is a port of the GGPO sample game VectorWar, using GGPOUE for netcode.
 
 ### Issues
 

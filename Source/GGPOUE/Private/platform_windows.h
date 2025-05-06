@@ -9,7 +9,7 @@
 #ifndef _GGPO_WINDOWS_H_
 #define _GGPO_WINDOWS_H_
 
- // UE4: allow Windows platform types to avoid naming collisions
+ // UE: allow Windows platform types; to avoid naming collisions
  //  this must be undone at the bottom of this file
 #include "Windows/AllowWindowsPlatformTypes.h"
 #include "Windows/prewindowsapi.h"
@@ -33,7 +33,7 @@ public:  // functions
    static bool GetConfigBool(const char* name);
 };
 
-// UE4: disallow windows platform types
+// UE: disallow windows platform types
 //  this was enabled at the top of the file
 #include "Windows/PostWindowsApi.h"
 #include "Windows/HideWindowsPlatformTypes.h"

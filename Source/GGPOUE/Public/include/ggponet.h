@@ -92,7 +92,7 @@ struct FGGPONetworkStats {
  * Composed of an ip address and a port.
  */
 UCLASS(Blueprintable)
-class GGPOUE4_API UGGPONetworkAddress : public UObject
+class GGPOUE_API UGGPONetworkAddress : public UObject
 {
     GENERATED_BODY()
 
@@ -135,7 +135,7 @@ public:
  * A collection of network addresses.
  */
 UCLASS(Blueprintable)
-class GGPOUE4_API UGGPONetwork : public UObject
+class GGPOUE_API UGGPONetwork : public UObject
 {
     GENERATED_BODY()
 
@@ -507,7 +507,7 @@ extern "C" {
 #endif
 
 
-class GGPOUE4_API GGPONet
+class GGPOUE_API GGPONet
 {
 public:
     /*
@@ -768,7 +768,7 @@ public:
      * ggpo_log --
      *
      * Used to write to the Unreal Engine log.
-     * The log is controlled from the project settings using GGPOUE4_Settings.
+     * The log is controlled from the project settings using GGPOUE_Settings.
      */
     static GGPO_API void __cdecl ggpo_log(GGPOSession*,
         const char* fmt, ...);

@@ -16,7 +16,7 @@
 	"Installed": false,
 	"Modules": [
 		{
-			"Name": "GGPOUE4",
+			"Name": "GGPOUE",
 			"Type": "Runtime",
 			"LoadingPhase": "Default"
 		}

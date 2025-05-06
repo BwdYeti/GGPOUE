@@ -33,7 +33,7 @@ void Logv(EGGPOLogVerbosity Verbosity, const char *fmt, va_list args)
    {
        // Get the settings object
        // Return if logging is not enabled
-      UGGPOUE4_Settings* Settings = GetMutableDefault<UGGPOUE4_Settings>();
+      UGGPOUE_Settings* Settings = GetMutableDefault<UGGPOUE_Settings>();
       if (!Settings->LoggingEnabled)
          return;
 

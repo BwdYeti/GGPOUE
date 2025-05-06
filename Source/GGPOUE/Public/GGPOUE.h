@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "Modules/ModuleManager.h"
 
-class FGGPOUE4Module : public IModuleInterface
+class FGGPOUEModule : public IModuleInterface
 {
 public:
 

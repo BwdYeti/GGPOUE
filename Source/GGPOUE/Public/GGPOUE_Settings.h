@@ -11,12 +11,12 @@
  * 
  */
 UCLASS(Config = "GGPOSettings", meta = (DisplayName = "GGPO"))
-class GGPOUE4_API UGGPOUE4_Settings : public UDeveloperSettings
+class GGPOUE_API UGGPOUE_Settings : public UDeveloperSettings
 {
 	GENERATED_BODY()
 
 public:
-	UGGPOUE4_Settings(const FObjectInitializer& obj);
+	UGGPOUE_Settings(const FObjectInitializer& obj);
 
 	UPROPERTY(Config, BlueprintReadOnly, EditAnywhere, Category = "Logging")
 		bool LoggingEnabled = false;
