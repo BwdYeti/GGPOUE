@@ -45,11 +45,11 @@ void Logv(EGGPOLogVerbosity Verbosity, const char *fmt, va_list args)
       vsprintf_s(logbuf, ARRAY_SIZE(logbuf), fmt, args);
       FString Message = FString(strlen(logbuf), logbuf);
 
-      Message.InsertAt(0, FString::Printf(TEXT("GGPO :: "), GPlayInEditorID));
+      Message.InsertAt(0, FString::Printf(TEXT("GGPO :: %d"), UE::GetPlayInEditorID()));
       // If this is an instance playing in the editor, include its Id
-      if (GPlayInEditorID >= 0)
+      if (UE::GetPlayInEditorID() >= 0)
       {
-          Message.InsertAt(0, FString::Printf(TEXT("PIE %d-"), GPlayInEditorID));
+          Message.InsertAt(0, FString::Printf(TEXT("PIE %d-"), UE::GetPlayInEditorID()));
       }
 
       UE_LOG(LogNet, Display, TEXT("%s"), *Message);
